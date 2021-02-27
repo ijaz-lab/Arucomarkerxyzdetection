@@ -9,29 +9,24 @@
 #include<iterator> 
 #include <sstream>
 #include <fstream>
-
 using namespace std;
 using namespace cv;
-
-int cameraID= 0; // camera ID
+int cameraID= 0;
+// camera ID
 int countImage =0;
 string clibrationPrameterFiles ="C:/arucomarkerwithxyzdetection/Files";
 const float calibrationSqureDimension = 0.01405f; // meters 
 const float arucoSquareDimension = 0.191f; //meters
 const Size chessboardDimension = Size(9, 7);
-
 // creating fucntion 
 
 void createKnowBoardPosition(Size boardSize, float squareEdgeLength, vector<Point3f>& corners)
-{
-
-    for (int i = 0; i < boardSize.height; i++) {
+{    for (int i = 0; i < boardSize.height; i++) {
 
         for (int j = 0; j < boardSize.width; j++)
         {
             corners.push_back(Point3f(j * squareEdgeLength, i * squareEdgeLength, 0.0f));
-            
-        }
+             }
     }
 }
 void getChessboardCorners(vector<Mat> images, vector<vector<Point2f>>& allFoundCorners, bool showResults = false) {
@@ -51,11 +46,8 @@ void getChessboardCorners(vector<Mat> images, vector<vector<Point2f>>& allFoundC
             drawChessboardCorners(*iter, Size(9, 7), pointBuf, found);
             imshow("Looking for Chess Board", *iter);
             waitKey(0);
-
-        }
-
+       }
     }
-
 }
 void cameraCalibration(vector<Mat> caliberationImages, Size boardSize, float squareEdgeLength, Mat& cameraMatrix, Mat& distanceCoefficient) {
     
@@ -71,7 +63,6 @@ void cameraCalibration(vector<Mat> caliberationImages, Size boardSize, float squ
     vector<Mat> rVectors, tVectors;
     distanceCoefficient = Mat::zeros(8, 1 ,CV_64F);
     calibrateCamera(wordSpaceCornersPoints, checkerboardImagesSpacePoints, boardSize, cameraMatrix, distanceCoefficient, rVectors, tVectors);
-
 
 }
 
@@ -158,9 +149,7 @@ bool loadCameraCalibration(string name, Mat& cameraMatrix, Mat& distanceCoeffici
         }
         inStream.close();
         return true;
-
     }
-
     return false;
 }
 
@@ -263,9 +252,6 @@ void cameraCalibrationProcess(Mat& cameraMatrix, Mat& distanceCoefficients)
                 savedImages.push_back(temp);
                 // imwrite("./image.png",frame);
                 cout<<"Saving Image"<<endl;
-
-
-
             }
             break;
         case 13:
@@ -280,29 +266,19 @@ void cameraCalibrationProcess(Mat& cameraMatrix, Mat& distanceCoefficients)
         case 27:
 
             //exit
-
-            return;
+        return;
             break;
           }
-
        }
      }
-
-
      int main(int, char**) {
     Mat cameraMatrix = Mat::eye(3, 3, CV_64F);
-
     Mat distanceCoefficients;
-
     // cameraCalibrationProcess(cameraMatrix, distanceCoefficients);
     // startWebcamMonitoring(cameraMatrix, distanceCoefficients, 0.099f);
-
       loadCameraCalibration(clibrationPrameterFiles, cameraMatrix, distanceCoefficients);
       startWebcamMonitoring(cameraMatrix, distanceCoefficients, arucoSquareDimension);
-
-
-    return 0;
-   
+    return 0;   
    
 }
 
